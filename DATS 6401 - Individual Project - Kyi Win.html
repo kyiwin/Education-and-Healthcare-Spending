@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script type="text/javascript">
+		google.charts.load('current',{'packages':['corechart']});
+		google.charts.setOnLoadCallback(drawAllSheets);
+
+
+		function drawAllSheets() {
+			drawSheetName('totales', 'SELECT A,B,C,D,E,F,G,H,I,J',
+						  educationSpendingResponseHandler);
+			drawSheetName('totalhs', 'SELECT A,H,I,J',
+							healthcareSpendingResponseHandler1);
+			drawSheetName('totalhs', 'SELECT A,K',
+						  healthcareSpendingResponseHandler);
+			drawSheetName('esgdp', 'SELECT A,B,C,D,E,F,G,H,I,J',
+							educationSpendingGDPResponseHandler);
+			drawSheetName('esgdp', 'SELECT A,G,H,I,J',
+							educationSpendingGDPResponseHandler1);
+			drawSheetName('hegdp', 'SELECT A,B,C,D,E,F,G,H,I,J',
+							healthcareSpendingGDPResponseHandler);
+			drawSheetName('hegdp', 'SELECT A,I,J',
+							healthcareSpendingGDPResponseHandler1);
+			drawSheetName('msude', 'SELECT A,K',
+		          militarySpendingEResponseHandler);
+			drawSheetName('msudh', 'SELECT A,K',
+							militarySpendingHResponseHandler);
+		  drawSheetName('ppes', 'SELECT A,J,T',
+		          ppesVsGdpResponseHandler);
+			drawSheetName('pphs', 'SELECT A,J,T',
+							pphsVsGdpResponseHandler);
+			drawSheetName('gre', 'SELECT A,K',
+						  growthratepercentEResponseHandler);
+			drawSheetName('grh', 'SELECT A,K',
+						  growthratepercentHResponseHandler);
+			drawSheetName('gre', 'SELECT A, L',
+							growthfixedEResponseHandler);
+			drawSheetName('grh', 'SELECT A, L',
+							growthfixedHResponseHandler);
+		} //drawAllSheets
+
+		function drawSheetName(sheetName, query, responseHandler) {
+			var queryString = encodeURIComponent(query);
+			var query = new google.visualization.Query(
+				'https://docs.google.com/spreadsheets/d/1CKvPbUMcMVI-IwnGTKOLFJgRnsndMmw5wcgDTijeBWE/gviz/tq?sheet='
+				+ sheetName + '&headers=1&tq=' + queryString);
+			query.send(responseHandler);
+		} //drawSheetName
+
+		function educationSpendingResponseHandler(response) {
+			var data = response.getDataTable();
+			data.sort({column:9 , desc:true});
+
+			var options = {
+				title: 'Education Spending of countries that spend the most on education',
+				height: 400,
+				vAxis: {title: 'Spending in Million ($)'},
+				hAxis: {title: 'Country'}
+			};
+
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('education_spending_div'));
+			chart.draw(data, options);
+		} //educationSpendingResponseHandler
+
+		function healthcareSpendingResponseHandler1(response) {
+			var data = response.getDataTable();
+			data.sort({column:3 , desc:true});
+
+			var options = {
+				title: 'Healthcare Spending of 2012,2013,2014',
+				colors: ['#191970','#C71585','#48D1CC'],
+				height: 400,
+				vAxis: {title: 'Spending in Million ($)'},
+				hAxis: {title: 'Country'}
+			};
+
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('healthcare_spending1_div'));
+			chart.draw(data, options);
+		} //healthcareSpendingResponseHandler1
+
+		function healthcareSpendingResponseHandler(response) {
+			var data = response.getDataTable();
+			data.sort({column:1 , desc:true});
+
+			var options = {
+				title: 'Overall Healthcare Spending for Top GDP Countries',
+				height: 400,
+				vAxis: {title: 'Spending in Million ($)'},
+				colors: ['#800000'],
+				hAxis: {title: 'Country'}
+			};
+
+			var chart = new google.visualization.SteppedAreaChart(
+						document.getElementById('healthcare_spending_div'));
+			chart.draw(data, options);
+		} //healthcareSpendingResponseHandler
+
+
+		function educationSpendingGDPResponseHandler(response) {
+			var data = response.getDataTable();
+			data.sort({column: 9, desc:true});
+
+			var options = {
+				title: 'Compare the country GDP to education spending',
+				height: 600,
+				colorAxis: {colors: ['pink', 'blue']}
+			};
+
+			var chart = new google.visualization.BubbleChart(
+						document.getElementById('education_spendingGDP_div'));
+			chart.draw(data, options);
+		} //educationSpendingGDPResponseHandler
+
+		function healthcareSpendingGDPResponseHandler(response) {
+			var data = response.getDataTable();
+			data.sort({column: 9, desc:true});
+
+			var options = {
+				title: 'Compare the country GDP to healthcare spending',
+				height: 600,
+				colorAxis: {colors: ['yellow', 'red']}
+			};
+
+			var chart = new google.visualization.BubbleChart(
+						document.getElementById('healthcare_spendingGDP_div'));
+			chart.draw(data, options);
+		} //healthcareSpendingGDPResponseHandler
+
+		function educationSpendingGDPResponseHandler1(response) {
+			var data = response.getDataTable();
+			data.sort({column: 4, desc:true});
+
+			var options = {
+				title: 'GDP% of Education Spending',
+				colors: ['#FFA07A','#20B2AA','#FF0000', '#708090'],
+				height: 400,
+				vAxis: {title: 'Country'},
+				hAxis: {title: 'GDP %'}
+			};
+
+			var chart = new google.visualization.BarChart(
+						document.getElementById('education_spendingGDP1_div'));
+			chart.draw(data, options);
+		} //educationSpendingGDPResponseHandler1
+
+		function healthcareSpendingGDPResponseHandler1(response) {
+			var data = response.getDataTable();
+			data.sort({column: 2, desc:true});
+
+			var options = {
+				title: 'GDP% of Healthcare Spending',
+				height: 400,
+				vAxis: {title: 'Country'},
+				hAxis: {title: 'GDP %'}
+			};
+
+			var chart = new google.visualization.BarChart(
+						document.getElementById('healthcare_spendingGDP1_div'));
+			chart.draw(data, options);
+		} //healthcareSpendingGDPResponseHandler1
+
+		function militarySpendingEResponseHandler(response) {
+			var data = response.getDataTable();
+			data.sort({column: 1, desc:true});
+
+			var options = {
+				title: 'Overall Military Spending of the most spent countries on education',
+        height: 500,
+				colorAxis: {colors: ['#FD8D24','black','#C70039','#FE7E9F']} //orange to blue
+
+			};
+
+			var chart = new google.visualization.GeoChart(
+					document.getElementById('military_spendingE_div'));
+
+			chart.draw(data, options);
+		} //militarySpendingEResponseHandler
+
+		function militarySpendingHResponseHandler(response) {
+			var data = response.getDataTable();
+			data.sort({column: 1, desc:true});
+
+			var options = {
+				title: 'Overall Military Spending of the most spent countries on healthcare',
+				height: 500,
+				colorAxis: {colors: ['#2D2A49','#741355','#9F1F77','#CC1850','#E135F9','#F850E1']} //orange to blue
+
+			};
+
+			var chart = new google.visualization.GeoChart(
+					document.getElementById('military_spendingH_div'));
+
+			chart.draw(data, options);
+		} //militarySpendingHResponseHandler
+
+		function ppesVsGdpResponseHandler(response) {
+		  var data = response.getDataTable();
+		  data.sort({column: 2, desc: true});
+
+		  var options = {
+		    height: 400,
+		    legend: 'none',
+		    bars: 'horizontal',
+		    isStacked: true,
+		    //annotations: {alwaysOutside: true},
+		    title: 'Per Capita Education Spending vs Per Capita GDP (2014)',
+		    vAxis: {title: 'Country'},
+				colors: ['#00FFFF','#FF1493'],
+		    hAxis: {title: 'Spending in Million ($)'}
+		  };
+
+		  var chart = new google.visualization.BarChart(
+		    document.getElementById('ppesVsGdp_div'));
+
+		  chart.draw(data, options);
+		} //perpersoneducationVsperpersonGdpResponseHandler
+
+		function pphsVsGdpResponseHandler(response) {
+			var data = response.getDataTable();
+			data.sort({column: 2, desc: true});
+
+			var options = {
+				height: 600,
+				legend: 'none',
+				bars: 'horizontal',
+				isStacked: true,
+				//annotations: {alwaysOutside: true},
+				title: 'Per Capita Healthcare Spending vs Per Capita GDP (2014)',
+				vAxis: {title: 'Country'},
+				colors: ['#FFBAB0','#AB737D'],
+				hAxis: {title: 'Spending in Million ($)'}
+			};
+
+			var chart = new google.visualization.BarChart(
+				document.getElementById('pphsVsGdp_div'));
+
+			chart.draw(data, options);
+		} //perpersonhealthcareVsperpersonGdpResponseHandler
+
+		function growthfixedEResponseHandler(response) {
+			var data = response.getDataTable();
+			data.sort({column: 1, desc:true});
+
+			var options = {
+				title: 'Fastest growing countries in fixed value (Education)',
+				height: 700,
+				colors: ['#FF6347'],
+				vAxis: {title: 'Country'},
+				hAxis: {title: 'Million'},
+			};
+
+			var view = new google.visualization.DataView(data);
+
+			view.setColumns([0,1,
+						{
+							calc: function(dt, row) {
+			return Math.floor(dt.getFormattedValue(row, 1)) + 'M';
+								},
+							sourceColumn: 1,
+							type: 'string',
+							role: 'annotation'
+						}]);
+
+			var chart = new google.visualization.BarChart(
+						document.getElementById('fgefixed_div'));
+			chart.draw(view, options);
+		} //fastestgrowingcountriesfixed(education)
+
+		function growthfixedHResponseHandler(response) {
+			var data = response.getDataTable();
+			data.sort({column: 1, desc:true});
+
+			var options = {
+				title: 'Fastest growing countries in fixed value (Healthcare)',
+				height: 700,
+				colors: ['#BD9CDB'],
+				vAxis: {title: 'Country'},
+				hAxis: {title: 'Million'}
+			};
+
+			var view = new google.visualization.DataView(data);
+
+			view.setColumns([0,1,
+						{
+							calc: function(dt, row) {
+		return Math.floor(dt.getFormattedValue(row, 1)) + 'M';
+								},
+							sourceColumn: 1,
+							type: 'string',
+							role: 'annotation'
+						}]);
+
+			var chart = new google.visualization.BarChart(
+						document.getElementById('fghfixed_div'));
+			chart.draw(view, options);
+		} //fastestgrowingcountriesfixed(healthcare)
+
+		function growthratepercentEResponseHandler(response) {
+			var data = response.getDataTable();
+			data.sort({column: 1, desc:true});
+
+			var options = {
+				title: 'Growth rate in Percentage(Education)',
+				height: 400,
+				colors: ['#5F9EA0'],
+				vAxis: {title: 'Percentage'},
+				hAxis: {title: 'Country'}
+			};
+
+			var view = new google.visualization.DataView(data);
+
+			view.setColumns([0,1,
+						{
+							calc: function(dt, row) {
+		return Math.floor(dt.getFormattedValue(row, 1)) + '%';
+								},
+							sourceColumn: 1,
+							type: 'string',
+							role: 'annotation'
+						}]);
+
+			var chart = new google.visualization.AreaChart(
+						document.getElementById('fgepercent_div'));
+			chart.draw(view, options);
+		} //annualgrowthrateeduction
+
+		function growthratepercentHResponseHandler(response) {
+			var data = response.getDataTable();
+			data.sort({column: 1, desc:true});
+
+			var options = {
+				title: 'Growth Rate in Percentage (Healthcare)',
+				height: 400,
+				colors: ['#DB7093'],
+				vAxis: {title: 'Percentage'},
+				hAxis: {title: 'Country'}
+			};
+
+			var view = new google.visualization.DataView(data);
+
+			view.setColumns([0,1,
+						{
+							calc: function(dt, row) {
+		return Math.floor(dt.getFormattedValue(row, 1)) + '%';
+								},
+							sourceColumn: 1,
+							type: 'string',
+							role: 'annotation'
+						}]);
+
+			var chart = new google.visualization.AreaChart(
+						document.getElementById('fghpercent_div'));
+			chart.draw(view, options);
+		} //annualgrowthratehealthcare
+
+	</script>
+</head>
+<body>
+	<h1 style = "color:black;  text-align:center;"> Education and Healthcare Spending </h1>
+	<h3 style = "color:black;  text-align:center;"> Kyi Win</h3>
+	<h3 style = "color:black;  text-align:center;"> March 13, 2018</h3>
+	</div>
+	<h3 style = "background: yellow"> Exploration of the Education and Healthcare Datasets </h3>
+	<h4> Educational Spending Analysis </h4>
+	<div id="education_spending_div" style="width:1200px; height:400px;">
+	</div>
+	<h4>Healthcare Spending Analysis of Top GDP Countries</h4>
+  <div id="healthcare_spending1_div" style="width:1200px; height:400px">
+	</div>
+	<div id="healthcare_spending_div" style="width:1000px; height:400px;">
+	</div>
+
+	<h3 style = "background: yellow">Compare the data to country's GDP</h3>
+	<h4> Showing the comparison with Bubble chart </h4>
+	<div id="education_spendingGDP_div" style="width:1200px; height:600px;">
+	</div>
+	<div id="healthcare_spendingGDP_div" style="width:1200px; height:600px;">
+	</div>
+	<h4> Showing the comparison with Bar Chart </h4>
+	<table class='columns'>
+		<tr>
+			<td><div id="education_spendingGDP1_div" style="width:600px; height:400px;"></div></td>
+			<td><div id="healthcare_spendingGDP1_div" style="width:600px; height:400px;"></div></td>
+		</tr>
+	</table>
+
+  <h3 style = "background: yellow">Compare the data to overall military spending of the country</h3>
+	<h4 style = "text-align: center;">Overall Military Spending of the countries that spend the most on Education</h4>
+  <div id="military_spendingE_div" style="widtd:1200 height:600;"></div>
+	<h4 style = "text-align: center;">Overall Military Spending of Top GDP countries(healthcare)</h4>
+	<div id="military_spendingH_div" style="widtd:1200 height:600;"></div>
+
+	<h3 style = "background: yellow">Compare per person educational spending to the per person GDP</h3>
+  <div id="ppesVsGdp_div" style="widtd:1200 height:600;"></div>
+	<h3 style = "background: yellow">Compare per person healthcare spending to the per person GDP</h3>
+  <div id="pphsVsGdp_div" style="widtd:1200 height:700;"></div>
+
+	<h3 style= "background: yellow">Fastest growing countries in healthcare and education</h3>
+	<h4>In Fixed value</h4>
+	<div id="fgefixed_div" style="widtd:1000 height:600;"></div>
+	<div id="fghfixed_div" style="widtd:1000 height:600;"></div>
+	<h4>In Percentage</h4>
+	<div id="fgepercent_div" style="widtd:1200 height:600;"></div>
+	<div id="fghpercent_div" style="widtd:1200 height:600;"></div>
+
+	<h3 style = "text-align: center;">Thank you</h3>
+</body>
+</html>
